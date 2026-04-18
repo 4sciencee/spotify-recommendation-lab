@@ -7,41 +7,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<!--
+  SPOTIFY WEB PLAYBACK SDK
+  Loaded from Spotify's CDN. Must be in <head> so it is ready before
+  any JavaScript runs. The SDK fires window.onSpotifyWebPlaybackSDKReady
+  when it finishes loading — we initialize the player inside that callback.
+-->
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
 <style>
-:root {
-  --green: #1DB954;
-  --green-dim: #158a3e;
-  --bg: #0d0d0d;
-  --bg2: #141414;
-  --bg3: #1a1a1a;
-  --bg4: #222222;
-  --bg5: #2a2a2a;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #f0f0f0;
-  --text2: #a0a0a0;
-  --text3: #666;
-  --red: #e22134;
-  --amber: #f59b23;
-  --radius: 10px;
-  --radius-lg: 16px;
-}
+:root{--green:#1DB954;--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#222222;--bg5:#2a2a2a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f0;--text2:#a0a0a0;--text3:#666;--red:#e22134;--amber:#f59b23;--radius:10px;--radius-lg:16px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-
-/* NAV */
 nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;}
 .nav-logo{display:flex;align-items:center;gap:10px;}
 .nav-logo svg{width:22px;height:22px;fill:var(--green);}
-.nav-logo span{font-size:14px;font-weight:600;color:var(--text);letter-spacing:0.01em;}
+.nav-logo span{font-size:14px;font-weight:600;color:var(--text);}
 .nav-links{display:flex;gap:2rem;}
 .nav-links a{font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;}
 .nav-links a:hover{color:var(--green);}
 .nav-tag{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
-
-/* HERO */
 .hero{max-width:1200px;margin:0 auto;padding:7rem 2rem 5rem;}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(29,185,84,0.1);border:1px solid rgba(29,185,84,0.25);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--green);font-weight:500;letter-spacing:0.04em;margin-bottom:2rem;}
 .hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
@@ -56,36 +42,23 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .btn-primary:hover{background:#22d65f;transform:translateY(-1px);}
 .btn-ghost{background:transparent;color:var(--text);padding:11px 24px;border-radius:100px;font-size:14px;font-weight:500;text-decoration:none;border:1px solid var(--border2);transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
 .btn-ghost:hover{border-color:var(--green);color:var(--green);}
-
-/* STATS STRIP */
 .stats-strip{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .stats-inner{max-width:1200px;margin:0 auto;padding:2.5rem 2rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;}
 .stat-item{text-align:center;}
 .stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--green);line-height:1;}
 .stat-label{font-size:13px;color:var(--text2);margin-top:6px;}
-
-/* SECTION */
 .section{max-width:1200px;margin:0 auto;padding:5rem 2rem;}
 .section-header{margin-bottom:3rem;}
 .section-tag{font-size:11px;font-weight:600;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;font-family:'DM Mono',monospace;}
 .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;line-height:1.2;margin-bottom:1rem;}
 .section-sub{font-size:16px;color:var(--text2);max-width:640px;line-height:1.7;}
-
-/* CARDS */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;}
-.card-grid{display:grid;gap:1rem;}
-.card-grid-2{grid-template-columns:repeat(2,1fr);}
-.card-grid-3{grid-template-columns:repeat(3,1fr);}
-
-/* CONCEPT CARDS */
 .concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:2rem;}
 .concept-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;transition:border-color 0.2s;}
 .concept-card:hover{border-color:rgba(29,185,84,0.3);}
 .concept-icon{width:36px;height:36px;border-radius:8px;background:rgba(29,185,84,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:16px;}
 .concept-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
 .concept-body{font-size:13px;color:var(--text2);line-height:1.65;}
-
-/* PIPELINE */
 .pipeline{display:flex;align-items:stretch;gap:0;margin:2.5rem 0;overflow-x:auto;padding-bottom:4px;}
 .pipeline-step{flex:1;min-width:160px;background:var(--bg2);border:1px solid var(--border);padding:1.25rem 1rem;position:relative;}
 .pipeline-step:first-child{border-radius:var(--radius) 0 0 var(--radius);}
@@ -95,35 +68,41 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .pipeline-num{font-size:11px;font-weight:600;color:var(--green);font-family:'DM Mono',monospace;margin-bottom:6px;}
 .pipeline-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .pipeline-desc{font-size:11px;color:var(--text2);line-height:1.5;}
-
-/* BUSINESS LESSONS */
 .lessons-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;}
 .lesson-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;border-top:3px solid var(--green);}
 .lesson-num{font-size:11px;font-family:'DM Mono',monospace;color:var(--green);margin-bottom:10px;}
 .lesson-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;}
 .lesson-body{font-size:13px;color:var(--text2);line-height:1.65;}
-
-/* DIVIDER */
 .divider{height:1px;background:var(--border);max-width:1200px;margin:0 auto;}
-
-/* ===================== SYSTEM ===================== */
 .system-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .system-inner{max-width:1200px;margin:0 auto;padding:4rem 2rem;}
-.system-header{margin-bottom:2.5rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:gap;}
 .system-layout{display:grid;grid-template-columns:1fr 360px;gap:1.5rem;align-items:start;}
 
-/* SIGNAL COUNTER */
+/* SPOTIFY CONNECT BANNER */
+.connect-banner{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.connect-info{display:flex;align-items:center;gap:10px;}
+.connect-info svg{width:20px;height:20px;fill:var(--green);flex-shrink:0;}
+.connect-text p{font-size:13px;font-weight:500;color:var(--text);}
+.connect-text span{font-size:11px;color:var(--text2);}
+.connect-right{display:flex;align-items:center;gap:12px;}
+.connect-status{display:flex;align-items:center;gap:6px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;}
+.status-dot.on{background:var(--green);animation:pulse 2s infinite;}
+.status-dot.err{background:var(--red);}
+.status-dot.warn{background:var(--amber);}
+.status-label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
+.connect-btn{background:var(--green);color:#000;border:none;border-radius:100px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.connect-btn:hover{background:#22d65f;}
+.connect-btn.done{background:transparent;color:var(--green);border:1px solid rgba(29,185,84,0.4);cursor:default;}
+.connect-btn.done:hover{background:transparent;}
+
 .signal-counter{display:flex;gap:10px;margin-bottom:1.5rem;}
 .sig-pill{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center;}
 .sig-num{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;}
 .sig-label{font-size:10px;color:var(--text2);margin-top:2px;letter-spacing:0.04em;text-transform:uppercase;}
-
-/* SONG CATALOG */
 .catalog-scroll{max-height:640px;overflow-y:auto;padding-right:4px;}
 .catalog-scroll::-webkit-scrollbar{width:4px;}
-.catalog-scroll::-webkit-scrollbar-track{background:transparent;}
 .catalog-scroll::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px;}
-
 .song-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;transition:border-color 0.2s;}
 .song-row:hover{border-color:var(--border2);}
 .song-dot{width:7px;height:7px;border-radius:50%;background:var(--bg5);flex-shrink:0;}
@@ -143,24 +122,19 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .s-btn.active-skip{background:var(--red);color:#fff;border-color:var(--red);}
 .s-btn.active-play{background:#444;color:#fff;border-color:var(--green);}
 .s-btn.active-replay{background:var(--green);color:#000;}
-
-/* RIGHT PANEL */
 .right-col{display:flex;flex-direction:column;gap:1.25rem;}
 .panel{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;}
 .panel-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;font-family:'DM Mono',monospace;}
-
 .sim-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
 .sim-row:last-child{border-bottom:none;}
 .sim-uid{font-size:12px;color:var(--text2);font-family:'DM Mono',monospace;}
 .sim-pct{font-size:12px;color:var(--green);font-weight:600;}
-
 .rec-item{padding:10px 0;border-bottom:1px solid var(--border);}
 .rec-item:last-child{border-bottom:none;padding-bottom:0;}
 .rec-name{font-size:13px;font-weight:500;color:var(--text);}
 .rec-sub{font-size:11px;color:var(--text2);margin-top:2px;}
 .rec-bar-bg{background:var(--bg5);border-radius:3px;height:3px;margin-top:7px;}
 .rec-bar-fill{height:3px;border-radius:3px;background:var(--green);transition:width 0.5s ease;}
-
 .log-box{max-height:150px;overflow-y:auto;}
 .log-box::-webkit-scrollbar{width:3px;}
 .log-box::-webkit-scrollbar-thumb{background:var(--bg5);}
@@ -168,8 +142,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .log-line:last-child{border-bottom:none;}
 .log-line em{color:var(--green);font-style:normal;}
 .empty-msg{font-size:12px;color:var(--text3);text-align:center;padding:1rem 0;}
-
-/* PLAYBAR */
 .playbar{position:fixed;bottom:0;left:0;right:0;background:rgba(17,17,17,0.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);z-index:200;transform:translateY(100%);transition:transform 0.3s ease;}
 .playbar.visible{transform:translateY(0);}
 .playbar-inner{max-width:1200px;margin:0 auto;padding:10px 2rem;display:flex;align-items:center;gap:1.5rem;}
@@ -181,21 +153,20 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .pb-btn:hover{color:var(--text);background:var(--bg4);}
 .pb-btn.primary{background:var(--green);color:#000;width:34px;height:34px;}
 .pb-btn.primary:hover{background:#22d65f;}
-.playbar-badge{font-size:10px;background:rgba(29,185,84,0.15);color:var(--green);border:1px solid rgba(29,185,84,0.3);border-radius:4px;padding:2px 7px;font-family:'DM Mono',monospace;}
-
-/* WRAPPED */
+.pb-badge{font-size:10px;border-radius:4px;padding:2px 8px;font-family:'DM Mono',monospace;}
+.pb-badge.demo{background:rgba(255,255,255,0.06);color:var(--text3);}
+.pb-badge.spotify{background:rgba(29,185,84,0.15);color:var(--green);border:1px solid rgba(29,185,84,0.3);}
 .wrapped-trigger{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;}
-.wrapped-progress-bar{background:var(--bg5);border-radius:3px;height:3px;margin:10px 0;}
-.wrapped-progress-fill{height:3px;border-radius:3px;background:var(--green);transition:width 0.4s;}
+.w-prog-bar{background:var(--bg5);border-radius:3px;height:3px;margin:10px 0;}
+.w-prog-fill{height:3px;border-radius:3px;background:var(--green);transition:width 0.4s;}
 .wrapped-btn{width:100%;padding:10px 16px;border-radius:20px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-top:8px;}
 .wrapped-btn.off{background:var(--bg5);color:var(--text3);cursor:not-allowed;}
 .wrapped-btn.on{background:var(--green);color:#000;}
 .wrapped-btn.on:hover{background:#22d65f;}
-
 .wrapped-output{background:var(--bg);border:1px solid rgba(29,185,84,0.3);border-radius:var(--radius-lg);padding:1.75rem;margin-top:1.5rem;display:none;}
 .wrapped-output.show{display:block;}
 .wrapped-logo{color:var(--green);font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:2px;}
-.wrapped-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:1.5rem;}
+.w-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:1.5rem;}
 .w-stat{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
 .w-stat:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0;}
 .w-stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:'DM Mono',monospace;margin-bottom:6px;}
@@ -208,28 +179,24 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.92);backdrop-fi
 .badge-play{background:rgba(245,155,35,0.15);color:var(--amber);}
 .w-callout{background:var(--green);color:#000;border-radius:var(--radius);padding:12px 14px;font-size:13px;font-weight:500;line-height:1.5;margin-top:1.25rem;}
 .w-footnote{font-size:10px;color:var(--text3);text-align:center;margin-top:12px;font-style:italic;line-height:1.5;}
-
-/* FOOTER */
 footer{border-top:1px solid var(--border);padding:3rem 2rem;}
 .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .footer-left p{font-size:13px;color:var(--text2);}
 .footer-left p+p{font-size:11px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;}
 .footer-right{font-size:12px;color:var(--text3);}
-
-/* RESPONSIVE */
 @media(max-width:900px){
   .system-layout{grid-template-columns:1fr;}
   .stats-inner{grid-template-columns:repeat(2,1fr);}
-  .lessons-grid,.card-grid-3,.card-grid-2{grid-template-columns:1fr;}
+  .lessons-grid{grid-template-columns:1fr;}
   .pipeline{flex-direction:column;}
   .pipeline-step{border-radius:var(--radius)!important;border:1px solid var(--border)!important;}
   .pipeline-arrow{display:none;}
+  .connect-banner{flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <div class="nav-logo">
@@ -245,7 +212,6 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-eyebrow"><span></span>MIS 432: AI in Business · Western Washington University</div>
   <h1>How Spotify turns <em>behavior</em> into the world's most personal music experience</h1>
@@ -257,15 +223,11 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
     <span class="hero-badge">Cosine Similarity</span>
   </div>
   <div class="hero-scroll">
-    <a href="#system" class="btn-primary">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      Try the live system
-    </a>
+    <a href="#system" class="btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Try the live system</a>
     <a href="#story" class="btn-ghost">Read the story →</a>
   </div>
 </div>
 
-<!-- STATS STRIP -->
 <div class="stats-strip">
   <div class="stats-inner">
     <div class="stat-item"><div class="stat-num">751M</div><div class="stat-label">Active Spotify users</div></div>
@@ -275,92 +237,34 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
   </div>
 </div>
 
-<!-- STORY -->
 <div id="story" class="section">
   <div class="section-header">
     <div class="section-tag">Part 1 — The Business Story</div>
     <h2 class="section-title">The problem with 100 million songs</h2>
     <p class="section-sub">When your catalog is too large for any human to navigate, personalization stops being a feature — it becomes the product.</p>
   </div>
-
   <div class="card" style="margin-bottom:2rem;">
     <p style="font-size:15px;line-height:1.8;color:var(--text2);">Spotify's core business problem is one of overwhelming abundance. With over 100 million songs and 751 million users, no editorial team can curate enough playlists to keep every listener engaged. The solution is not hiring more editors — it is building an AI system that learns each person's taste from their behavior and serves the right song at the right moment, automatically. That system is a <strong style="color:var(--text);">recommendation engine</strong>, and it is the reason Spotify retains users at rates that competitors cannot match. It is not a feature bolted on top of the product. It is the product.</p>
   </div>
-
   <div class="concept-grid">
-    <div class="concept-card">
-      <div class="concept-icon">📡</div>
-      <div class="concept-title">Implicit signals</div>
-      <div class="concept-body">Instead of asking users to rate songs, Spotify watches what they actually do. A skip within 5 seconds is a strong negative signal. Replaying a song three times is a strong positive signal. These behavioral signals are more honest and more abundant than ratings — and they power everything else.</div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-icon">🔧</div>
-      <div class="concept-title">Feature engineering</div>
-      <div class="concept-body">Raw events like "User skipped HUMBLE. at 4 seconds" are not usable by a model. Feature engineering transforms them into structured numbers: skip rate = 0.67, replay rate = 0.20, top genre affinity = 0.85. The quality of these features determines the quality of every recommendation downstream.</div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-icon">🤝</div>
-      <div class="concept-title">Collaborative filtering</div>
-      <div class="concept-body">The algorithm never reads lyrics or analyzes a song's tempo. It simply asks: which other users have similar behavioral patterns to this one? Then it surfaces what those users loved. The insight driving the recommendations is not about music — it is about people who behave like each other.</div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-icon">🔍</div>
-      <div class="concept-title">Unsupervised clustering</div>
-      <div class="concept-body">K-Means clustering groups users by behavioral similarity without any labels. Nobody told Spotify what a "late-night chill listener" looks like. The algorithm discovered that pattern from millions of late-night, high-replay-rate sessions on its own. These clusters drive targeting, playlist curation, and artist promotion.</div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-icon">🧭</div>
-      <div class="concept-title">Embeddings</div>
-      <div class="concept-body">Every song and user gets mapped to a point in a high-dimensional mathematical space where closeness = similarity. Songs that appear in similar listening sessions end up near each other in this space — even if they share no genre, tempo, or artist. This is how Spotify recommends songs across genre boundaries.</div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-icon">⚠️</div>
-      <div class="concept-title">AI governance</div>
-      <div class="concept-body">When AI systems fail — biased recommendations, popularity bubbles, filter traps — they often fail silently. No error message appears. The model just quietly stops serving users well. Managing that risk is a business problem, not a technical one. It requires monitoring, auditing, and accountability at the organizational level.</div>
-    </div>
+    <div class="concept-card"><div class="concept-icon">📡</div><div class="concept-title">Implicit signals</div><div class="concept-body">Instead of asking users to rate songs, Spotify watches what they actually do. A skip within 5 seconds is a strong negative signal. Replaying a song three times is a strong positive signal. These behavioral signals are more honest and more abundant than ratings — and they power everything else.</div></div>
+    <div class="concept-card"><div class="concept-icon">🔧</div><div class="concept-title">Feature engineering</div><div class="concept-body">Raw events like "User skipped HUMBLE. at 4 seconds" are not usable by a model. Feature engineering transforms them into structured numbers: skip rate = 0.67, replay rate = 0.20, top genre affinity = 0.85. The quality of these features determines the quality of every recommendation downstream.</div></div>
+    <div class="concept-card"><div class="concept-icon">🤝</div><div class="concept-title">Collaborative filtering</div><div class="concept-body">The algorithm never reads lyrics or analyzes a song's tempo. It simply asks: which other users have similar behavioral patterns to this one? Then it surfaces what those users loved. The insight driving the recommendations is not about music — it is about people who behave like each other.</div></div>
+    <div class="concept-card"><div class="concept-icon">🔍</div><div class="concept-title">Unsupervised clustering</div><div class="concept-body">K-Means clustering groups users by behavioral similarity without any labels. Nobody told Spotify what a "late-night chill listener" looks like. The algorithm discovered that pattern from millions of late-night, high-replay-rate sessions on its own. These clusters drive targeting, playlist curation, and artist promotion.</div></div>
+    <div class="concept-card"><div class="concept-icon">🧭</div><div class="concept-title">Embeddings</div><div class="concept-body">Every song and user gets mapped to a point in a high-dimensional mathematical space where closeness = similarity. Songs that appear in similar listening sessions end up near each other in this space — even if they share no genre, tempo, or artist. This is how Spotify recommends songs across genre boundaries.</div></div>
+    <div class="concept-card"><div class="concept-icon">⚠️</div><div class="concept-title">AI governance</div><div class="concept-body">When AI systems fail — biased recommendations, popularity bubbles, filter traps — they often fail silently. No error message appears. The model just quietly stops serving users well. Managing that risk is a business problem, not a technical one. It requires monitoring, auditing, and accountability at the organizational level.</div></div>
   </div>
-
   <div style="margin-top:3rem;">
     <div class="section-tag" style="margin-bottom:1rem;">The data pipeline</div>
     <div class="pipeline">
-      <div class="pipeline-step">
-        <div class="pipeline-num">01</div>
-        <div class="pipeline-name">Raw events</div>
-        <div class="pipeline-desc">User skips, plays, replays collected passively</div>
-        <div class="pipeline-arrow">›</div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">02</div>
-        <div class="pipeline-name">Engagement scores</div>
-        <div class="pipeline-desc">Skip=0.1, Play=0.5, Replay=0.9</div>
-        <div class="pipeline-arrow">›</div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">03</div>
-        <div class="pipeline-name">Feature engineering</div>
-        <div class="pipeline-desc">Skip rate, replay rate, genre affinity per user</div>
-        <div class="pipeline-arrow">›</div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">04</div>
-        <div class="pipeline-name">User-song matrix</div>
-        <div class="pipeline-desc">Every user × every song scored in a grid</div>
-        <div class="pipeline-arrow">›</div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">05</div>
-        <div class="pipeline-name">Cosine similarity</div>
-        <div class="pipeline-desc">Find users with overlapping behavioral patterns</div>
-        <div class="pipeline-arrow">›</div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">06</div>
-        <div class="pipeline-name">Recommendations</div>
-        <div class="pipeline-desc">Surface what similar users loved but you haven't heard</div>
-      </div>
+      <div class="pipeline-step"><div class="pipeline-num">01</div><div class="pipeline-name">Raw events</div><div class="pipeline-desc">User skips, plays, replays collected passively</div><div class="pipeline-arrow">›</div></div>
+      <div class="pipeline-step"><div class="pipeline-num">02</div><div class="pipeline-name">Engagement scores</div><div class="pipeline-desc">Skip=0.1, Play=0.5, Replay=0.9</div><div class="pipeline-arrow">›</div></div>
+      <div class="pipeline-step"><div class="pipeline-num">03</div><div class="pipeline-name">Feature engineering</div><div class="pipeline-desc">Skip rate, replay rate, genre affinity per user</div><div class="pipeline-arrow">›</div></div>
+      <div class="pipeline-step"><div class="pipeline-num">04</div><div class="pipeline-name">User-song matrix</div><div class="pipeline-desc">Every user × every song scored in a grid</div><div class="pipeline-arrow">›</div></div>
+      <div class="pipeline-step"><div class="pipeline-num">05</div><div class="pipeline-name">Cosine similarity</div><div class="pipeline-desc">Find users with overlapping behavioral patterns</div><div class="pipeline-arrow">›</div></div>
+      <div class="pipeline-step"><div class="pipeline-num">06</div><div class="pipeline-name">Recommendations</div><div class="pipeline-desc">Surface what similar users loved but you haven't heard</div></div>
     </div>
   </div>
-
   <div class="card" style="margin-top:3rem;border-left:3px solid var(--green);border-radius:0 var(--radius-lg) var(--radius-lg) 0;">
     <div class="section-tag" style="margin-bottom:10px;">Why Wrapped costs Spotify almost nothing</div>
     <p style="font-size:15px;line-height:1.8;color:var(--text2);">Spotify Wrapped generated 600 million social media posts in 2023 and 1.4 billion AI-personalized reports in 2025. The reason it is economically extraordinary is that it costs nearly nothing to produce. Wrapped does not run a separate data pipeline — it reuses the exact same engagement signals already being collected for recommendations. Every skip, replay, and search that powers your Discover Weekly is the same data that becomes your "you were in the top 2% of Olivia Rodrigo listeners" card. The infrastructure was already paid for. Wrapped is just a storytelling layer on top of it. This is what data infrastructure as a business asset looks like in practice: a single behavioral data system that powers personalization, retention, and viral marketing simultaneously.</p>
@@ -369,18 +273,40 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
 
 <div class="divider"></div>
 
-<!-- LIVE SYSTEM -->
 <div id="system" class="system-section">
   <div class="system-inner">
-    <div class="system-header">
-      <div>
-        <div class="section-tag">Part 2 — Live System</div>
-        <h2 class="section-title" style="margin:6px 0;">The recommendation engine</h2>
-        <p style="font-size:14px;color:var(--text2);">Rate songs to generate real-time recommendations powered by cosine similarity and collaborative filtering.</p>
+    <div style="margin-bottom:2.5rem;">
+      <div class="section-tag">Part 2 — Live System</div>
+      <h2 class="section-title" style="margin:6px 0;">The recommendation engine</h2>
+      <p style="font-size:14px;color:var(--text2);">Rate songs to generate real-time recommendations powered by cosine similarity and collaborative filtering.</p>
+    </div>
+
+    <!--
+      SPOTIFY CONNECT BANNER
+      This is the visible Connect Spotify button required by the lab.
+      Clicking it calls spotifyLogin() to start the PKCE OAuth flow.
+      The banner updates dynamically to reflect connection state.
+    -->
+    <div class="connect-banner">
+      <div class="connect-info">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <div class="connect-text">
+          <p id="connect-title">Connect Spotify Premium</p>
+          <span id="connect-sub">Optional — stream real songs when you Play or Replay. Requires Spotify Premium. Demo mode works for everyone.</span>
+        </div>
+      </div>
+      <div class="connect-right">
+        <div class="connect-status">
+          <div class="status-dot" id="status-dot"></div>
+          <span class="status-label" id="status-label">Demo mode</span>
+        </div>
+        <button class="connect-btn" id="connect-btn" onclick="spotifyLogin()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          Connect Spotify
+        </button>
       </div>
     </div>
 
-    <!-- SIGNAL COUNTER -->
     <div class="signal-counter">
       <div class="sig-pill"><div class="sig-num" id="cnt-total" style="color:var(--text);">0</div><div class="sig-label">Total signals</div></div>
       <div class="sig-pill"><div class="sig-num" id="cnt-replay" style="color:var(--green);">0</div><div class="sig-label">Replayed</div></div>
@@ -389,42 +315,33 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
     </div>
 
     <div class="system-layout">
-      <!-- LEFT: CATALOG -->
       <div>
         <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;font-family:'DM Mono',monospace;">Song catalog — 15 tracks</div>
         <div class="catalog-scroll" id="catalog"></div>
       </div>
-
-      <!-- RIGHT: PANELS -->
       <div class="right-col">
         <div class="panel">
           <div class="panel-label">Most similar users</div>
           <div id="sim-users"><div class="empty-msg">Rate songs to find taste matches</div></div>
         </div>
-
         <div class="panel">
           <div class="panel-label">Recommended for you</div>
           <div id="recs"><div class="empty-msg">Rate 3+ songs to unlock recommendations</div></div>
         </div>
-
         <div class="panel">
           <div class="panel-label">Live data signal log</div>
           <div class="log-box" id="log"><div class="empty-msg">Behavioral signals appear here</div></div>
         </div>
-
-        <!-- WRAPPED TRIGGER -->
         <div class="wrapped-trigger">
           <div class="panel-label">Spotify wrapped</div>
           <p style="font-size:12px;color:var(--text2);margin-bottom:8px;">Rate 5 songs to generate your personalized summary</p>
-          <div class="wrapped-progress-bar"><div class="wrapped-progress-fill" id="w-prog" style="width:0%"></div></div>
+          <div class="w-prog-bar"><div class="w-prog-fill" id="w-prog" style="width:0%"></div></div>
           <p id="w-prog-label" style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:2px;">0 / 5 songs rated</p>
           <button class="wrapped-btn off" id="wrapped-btn" onclick="genWrapped()">Generate my Wrapped</button>
         </div>
-
-        <!-- WRAPPED OUTPUT -->
         <div class="wrapped-output" id="wrapped-out">
           <div class="wrapped-logo">Wrapped</div>
-          <div class="wrapped-date" id="w-date"></div>
+          <div class="w-date" id="w-date"></div>
           <div id="w-content"></div>
           <div class="w-footnote">This Wrapped was generated from the exact same behavioral data log that powered your recommendations above — the same infrastructure, repurposed as storytelling.</div>
         </div>
@@ -433,16 +350,15 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
   </div>
 </div>
 
-<!-- PLAYBAR -->
 <div class="playbar" id="playbar">
   <div class="playbar-inner">
     <div class="playbar-info">
       <div class="playbar-title" id="pb-title">—</div>
       <div class="playbar-artist" id="pb-artist">—</div>
     </div>
-    <span class="playbar-badge" id="pb-mode">Demo mode</span>
+    <span class="pb-badge demo" id="pb-badge">Demo mode</span>
     <div class="playbar-controls">
-      <button class="pb-btn primary" id="pb-playpause" onclick="togglePlay()">
+      <button class="pb-btn primary" id="pb-pp" onclick="togglePlay()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
       <button class="pb-btn" onclick="stopPlay()">
@@ -452,34 +368,19 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
   </div>
 </div>
 
-<!-- KEY LESSONS -->
 <div id="lessons" class="section">
   <div class="section-header">
     <div class="section-tag">Part 3 — Key Takeaways</div>
     <h2 class="section-title">Three business lessons from building this</h2>
     <p class="section-sub">What this project revealed about AI, data, and competitive strategy — written for anyone who manages technology, not just those who build it.</p>
   </div>
-
   <div class="lessons-grid">
-    <div class="lesson-card">
-      <div class="lesson-num">Lesson 01</div>
-      <div class="lesson-title">Data is the moat, not the algorithm</div>
-      <div class="lesson-body">A competitor can license the same 100 million songs and deploy a similar collaborative filtering algorithm. What they cannot replicate is the behavioral history Spotify has accumulated over a decade from 751 million users. The algorithm improves as data compounds — and that compounding advantage grows faster than any engineering team can close. For any business evaluating AI investment, the question is not "can we build the model?" It is "do we have the data to make the model worth building?"</div>
-    </div>
-    <div class="lesson-card">
-      <div class="lesson-num">Lesson 02</div>
-      <div class="lesson-title">Infrastructure built for one purpose serves many</div>
-      <div class="lesson-body">Spotify did not build a separate system for Wrapped. It layered a storytelling product on top of behavioral data already being collected for recommendations. This pattern — where the same data asset powers multiple business outcomes — is the hallmark of mature AI infrastructure. Businesses that think of data collection as a feature cost are missing the point. Every signal collected is a future product waiting to be built.</div>
-    </div>
-    <div class="lesson-card">
-      <div class="lesson-num">Lesson 03</div>
-      <div class="lesson-title">AI governance is a management problem</div>
-      <div class="lesson-body">When a recommendation model fails — serving biased results, amplifying popularity bubbles, or creating filter traps — it fails silently. No error message. No dashboard alert. Just a user who stops finding new music and eventually churns. Monitoring for silent failure, auditing for bias, and defining accountability when AI systems misbehave are decisions that live in the executive suite, not the engineering team. AI governance is technology management, not a technical discipline.</div>
-    </div>
+    <div class="lesson-card"><div class="lesson-num">Lesson 01</div><div class="lesson-title">Data is the moat, not the algorithm</div><div class="lesson-body">A competitor can license the same 100 million songs and deploy a similar collaborative filtering algorithm. What they cannot replicate is the behavioral history Spotify has accumulated over a decade from 751 million users. The algorithm improves as data compounds — and that compounding advantage grows faster than any engineering team can close. For any business evaluating AI investment, the question is not "can we build the model?" It is "do we have the data to make the model worth building?"</div></div>
+    <div class="lesson-card"><div class="lesson-num">Lesson 02</div><div class="lesson-title">Infrastructure built for one purpose serves many</div><div class="lesson-body">Spotify did not build a separate system for Wrapped. It layered a storytelling product on top of behavioral data already being collected for recommendations. This pattern — where the same data asset powers multiple business outcomes — is the hallmark of mature AI infrastructure. Businesses that think of data collection as a feature cost are missing the point. Every signal collected is a future product waiting to be built.</div></div>
+    <div class="lesson-card"><div class="lesson-num">Lesson 03</div><div class="lesson-title">AI governance is a management problem</div><div class="lesson-body">When a recommendation model fails — serving biased results, amplifying popularity bubbles, or creating filter traps — it fails silently. No error message. No dashboard alert. Just a user who stops finding new music and eventually churns. Monitoring for silent failure, auditing for bias, and defining accountability when AI systems misbehave are decisions that live in the executive suite, not the engineering team. AI governance is technology management, not a technical discipline.</div></div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
@@ -491,6 +392,43 @@ footer{border-top:1px solid var(--border);padding:3rem 2rem;}
 </footer>
 
 <script>
+// ================================================================
+// CONFIGURATION
+// Update CLIENT_ID or REDIRECT_URI here if your Spotify app changes.
+// No client secret is used anywhere — this is a purely front-end
+// PKCE flow, safe for static GitHub Pages hosting.
+// ================================================================
+const CLIENT_ID     = 'e7b5b6ad44e44e63bc9a5aebc3edcc94';
+const REDIRECT_URI  = 'https://4sciencee.github.io/spotify-recommendation-lab/';
+const SCOPES        = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state';
+
+// ================================================================
+// SPOTIFY TRACK URIs
+// Each song is mapped to its Spotify track URI.
+// Format: spotify:track:<Spotify track ID>
+// These tell the Web Playback SDK exactly which song to stream.
+// ================================================================
+const TRACK_URIS = {
+  'Blinding Lights':     'spotify:track:0VjIjW4GlUZAMYd2vXMi3b',
+  'HUMBLE.':             'spotify:track:7KXjTSCq5nL1LoYtL7XAwS',
+  'Levitating':          'spotify:track:463CkQjx2Zfoiqr0eszsxc',
+  'bad guy':             'spotify:track:2Fxmhks0bxGSBdJ92vM42m',
+  "God's Plan":          'spotify:track:6DCZcSspjsKoFjzjrWoCdn',
+  'As It Was':           'spotify:track:4LRPiXqCikLlN15c3yImP7',
+  'MONTERO':             'spotify:track:5Z9KSZLlzN3kgaHsGSvAMP',
+  'drivers license':     'spotify:track:5wANPM4fQCJwkW6AIhNAlB',
+  'Watermelon Sugar':    'spotify:track:6UelLqGlWMcVH1E5c4H7lY',
+  'Peaches':             'spotify:track:4iJyoBOLtHqaWYs3vyWERF',
+  'Industry Baby':       'spotify:track:27NovPIUIRrOZoCHxABJwK',
+  'good 4 u':            'spotify:track:4ZtFanR9U6ndgddUvNcjcG',
+  'Leave The Door Open': 'spotify:track:0bCWHoEAlOxAQFaRdMCfYH',
+  'STAY':                'spotify:track:5HCyWlXZPP0y6Gqq8TgA20',
+  'Heat Waves':          'spotify:track:02MWAaffLxlfxAUY7c5dvx'
+};
+
+// ================================================================
+// SONG DATA AND PRESET USERS (unchanged from original)
+// ================================================================
 const songs=[
   {name:"Blinding Lights",artist:"The Weeknd",genre:"Pop"},
   {name:"HUMBLE.",artist:"Kendrick Lamar",genre:"Hip-Hop"},
@@ -508,7 +446,6 @@ const songs=[
   {name:"STAY",artist:"The Kid LAROI & Justin Bieber",genre:"Pop"},
   {name:"Heat Waves",artist:"Glass Animals",genre:"Indie"}
 ];
-
 const presetUsers={
   user_01:{"As It Was":0.9,"Blinding Lights":0.9,"God's Plan":0.1,"HUMBLE.":0.1,"Heat Waves":0.5,"Industry Baby":0.1,"Leave The Door Open":0.1,"Levitating":0.9,"MONTERO":0.5,"Peaches":0.1,"STAY":0.9,"Watermelon Sugar":0.9,"bad guy":0.1,"drivers license":0.9,"good 4 u":0.5},
   user_02:{"As It Was":0.5,"Blinding Lights":0.9,"God's Plan":0.1,"HUMBLE.":0.1,"Heat Waves":0.5,"Industry Baby":0.1,"Leave The Door Open":0.1,"Levitating":0.9,"MONTERO":0.1,"Peaches":0.9,"STAY":0.5,"Watermelon Sugar":0.9,"bad guy":0.5,"drivers license":0.9,"good 4 u":0.1},
@@ -521,211 +458,412 @@ const presetUsers={
   user_09:{"As It Was":0.5,"Blinding Lights":0.9,"God's Plan":0.9,"HUMBLE.":0.9,"Heat Waves":0.1,"Industry Baby":0.9,"Leave The Door Open":0.5,"Levitating":0.9,"MONTERO":0.9,"Peaches":0.5,"STAY":0.9,"Watermelon Sugar":0.9,"bad guy":0.1,"drivers license":0.9,"good 4 u":0.1}
 };
 
+// ================================================================
+// APP STATE
+// ================================================================
 let userData={};
 let logLines=[];
 let playing=false;
 let currentSong=null;
 
+// ================================================================
+// SPOTIFY STATE
+// spotifyToken    — access token from OAuth. Stored in sessionStorage
+//                  so it survives the redirect back from Spotify's
+//                  login page without requiring another login.
+// spotifyPlayer   — the Web Playback SDK Player instance for this tab.
+// spotifyDeviceId — the device ID Spotify assigns to this browser tab.
+//                  Required in every API call to target this player.
+// spotifyReady    — true only when token + SDK player + device ID
+//                  are all confirmed and Premium is active.
+// ================================================================
+let spotifyToken    = null;
+let spotifyPlayer   = null;
+let spotifyDeviceId = null;
+let spotifyReady    = false;
+let sdkLoaded       = false;
+
+// ================================================================
+// PKCE UTILITIES
+// PKCE (Proof Key for Code Exchange) allows front-end apps to use
+// OAuth without a client secret. The app generates a random
+// "code verifier", hashes it to a "code challenge", and sends
+// the challenge to Spotify. Spotify returns an auth code. The app
+// then exchanges that code for a token by sending the original
+// verifier — proving the same browser initiated the flow.
+// ================================================================
+function genRandom(len){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  const arr=new Uint8Array(len);
+  crypto.getRandomValues(arr);
+  return Array.from(arr,v=>chars[v%chars.length]).join('');
+}
+async function codeChallenge(verifier){
+  const data=new TextEncoder().encode(verifier);
+  const digest=await crypto.subtle.digest('SHA-256',data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+}
+
+// ================================================================
+// SPOTIFY LOGIN — starts the PKCE OAuth flow.
+// Called when the user clicks "Connect Spotify".
+// Generates a verifier, stores it, builds the auth URL, and
+// redirects the browser to Spotify's login page.
+// After login Spotify redirects back to REDIRECT_URI with ?code=...
+// That is picked up by handleOAuthRedirect() on the next page load.
+// ================================================================
+async function spotifyLogin(){
+  const verifier=genRandom(64);
+  const challenge=await codeChallenge(verifier);
+  sessionStorage.setItem('pkce_v',verifier);
+  const p=new URLSearchParams({
+    client_id:CLIENT_ID,
+    response_type:'code',
+    redirect_uri:REDIRECT_URI,
+    scope:SCOPES,
+    code_challenge_method:'S256',
+    code_challenge:challenge,
+    show_dialog:'true'
+  });
+  window.location.href='https://accounts.spotify.com/authorize?'+p.toString();
+}
+
+// ================================================================
+// HANDLE OAUTH REDIRECT — called on every page load.
+// If the URL contains ?code= we just came back from Spotify's login.
+// Exchange that code + stored PKCE verifier for an access token.
+// Store the token in sessionStorage, then clean the URL.
+// If the URL contains ?error= the user cancelled — stay in demo mode.
+// ================================================================
+async function handleOAuthRedirect(){
+  const p=new URLSearchParams(window.location.search);
+  const code=p.get('code');
+  const err=p.get('error');
+  if(err){history.replaceState({},'',location.pathname);return;}
+  if(!code)return;
+  const verifier=sessionStorage.getItem('pkce_v');
+  if(!verifier){history.replaceState({},'',location.pathname);return;}
+  try{
+    const res=await fetch('https://accounts.spotify.com/api/token',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({
+        client_id:CLIENT_ID,
+        grant_type:'authorization_code',
+        code,
+        redirect_uri:REDIRECT_URI,
+        code_verifier:verifier
+      })
+    });
+    const data=await res.json();
+    if(data.access_token){
+      // Store access token in sessionStorage — persists through page load
+      // but is cleared when the browser tab is closed
+      spotifyToken=data.access_token;
+      sessionStorage.setItem('sp_token',spotifyToken);
+      sessionStorage.removeItem('pkce_v');
+      history.replaceState({},'',location.pathname);
+      // Initialize the Web Playback SDK with the fresh token
+      if(sdkLoaded) initPlayer();
+    } else {
+      history.replaceState({},'',location.pathname);
+    }
+  }catch(e){
+    console.error('Token exchange failed:',e);
+    history.replaceState({},'',location.pathname);
+  }
+}
+
+// ================================================================
+// WEB PLAYBACK SDK INITIALIZATION
+// window.onSpotifyWebPlaybackSDKReady fires when the SDK script
+// finishes loading. We set sdkLoaded=true here, then if a token
+// is already available (from sessionStorage), we create the player.
+// If the token arrives later (after redirect), initPlayer() is
+// called from handleOAuthRedirect() once the token is stored.
+// ================================================================
+window.onSpotifyWebPlaybackSDKReady=()=>{
+  sdkLoaded=true;
+  if(spotifyToken) initPlayer();
+};
+
+function initPlayer(){
+  if(!spotifyToken||!sdkLoaded) return;
+  spotifyPlayer=new Spotify.Player({
+    name:'MIS 432 Recommendation Engine',
+    getOAuthToken:cb=>cb(spotifyToken),
+    volume:0.7
+  });
+
+  // SDK is ready — Spotify assigned a device ID to this browser tab
+  spotifyPlayer.addListener('ready',({device_id})=>{
+    spotifyDeviceId=device_id;
+    spotifyReady=true;
+    setBannerState('connected');
+  });
+
+  // Player went offline — fall back to demo mode gracefully
+  spotifyPlayer.addListener('not_ready',()=>{
+    spotifyReady=false;
+    spotifyDeviceId=null;
+    setBannerState('demo');
+  });
+
+  // Token invalid or expired
+  spotifyPlayer.addListener('authentication_error',()=>{
+    spotifyReady=false;
+    setBannerState('error');
+  });
+
+  // Logged in but no Spotify Premium — playback SDK requires Premium
+  spotifyPlayer.addListener('account_error',()=>{
+    spotifyReady=false;
+    setBannerState('nopremium');
+  });
+
+  spotifyPlayer.connect();
+}
+
+// ================================================================
+// SET BANNER STATE — updates the Connect banner to reflect the
+// current connection status. The site always works in demo mode
+// if any step fails. No functionality is broken by a failed
+// Spotify connection.
+// ================================================================
+function setBannerState(state){
+  const dot=document.getElementById('status-dot');
+  const lbl=document.getElementById('status-label');
+  const btn=document.getElementById('connect-btn');
+  const sub=document.getElementById('connect-sub');
+  const badge=document.getElementById('pb-badge');
+  if(state==='connected'){
+    dot.className='status-dot on';
+    lbl.textContent='Spotify connected';
+    lbl.style.color='var(--green)';
+    btn.className='connect-btn done';
+    btn.textContent='✓ Connected';
+    btn.onclick=null;
+    sub.textContent='Play and Replay now stream real songs through Spotify.';
+    badge.textContent='Spotify';
+    badge.className='pb-badge spotify';
+  } else if(state==='nopremium'){
+    dot.className='status-dot warn';
+    lbl.textContent='Premium required';
+    lbl.style.color='var(--amber)';
+    sub.textContent='Logged in, but Spotify Premium is required for browser playback. Running in demo mode.';
+  } else if(state==='error'){
+    dot.className='status-dot err';
+    lbl.textContent='Auth error';
+    lbl.style.color='var(--red)';
+    sub.textContent='Authentication failed. Refresh and try connecting again, or continue in demo mode.';
+  } else {
+    dot.className='status-dot';
+    lbl.textContent='Demo mode';
+    lbl.style.color='var(--text3)';
+  }
+}
+
+// ================================================================
+// SPOTIFY PLAYBACK API
+// Sends a PUT request to the Spotify Web API to start playback
+// on this browser tab (identified by spotifyDeviceId).
+// Returns true if playback started, false on any failure.
+// A false return causes the calling code to fall back to demo mode.
+// ================================================================
+async function spotifyPlay(songName){
+  if(!spotifyReady||!spotifyToken||!spotifyDeviceId) return false;
+  const uri=TRACK_URIS[songName];
+  if(!uri) return false;
+  try{
+    const r=await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`,{
+      method:'PUT',
+      headers:{'Authorization':'Bearer '+spotifyToken,'Content-Type':'application/json'},
+      body:JSON.stringify({uris:[uri]})
+    });
+    return r.status===204||r.ok;
+  }catch(e){return false;}
+}
+
+// ================================================================
+// CATALOG BUILDER — generates the 15-song catalog rows
+// ================================================================
 function buildCatalog(){
-  const el=document.getElementById('catalog');
-  el.innerHTML=songs.map((s,i)=>`
+  document.getElementById('catalog').innerHTML=songs.map((s,i)=>`
     <div class="song-row" id="row-${i}">
       <div class="song-dot" id="dot-${i}"></div>
-      <div class="song-info">
-        <div class="song-name">${s.name}</div>
-        <div class="song-artist">${s.artist}</div>
-      </div>
+      <div class="song-info"><div class="song-name">${s.name}</div><div class="song-artist">${s.artist}</div></div>
       <span class="genre-tag">${s.genre}</span>
       <div class="btn-row">
         <button class="s-btn skip" onclick="rate(${i},0.1,this)">Skip</button>
         <button class="s-btn play" onclick="rate(${i},0.5,this)">Play</button>
         <button class="s-btn replay" onclick="rate(${i},0.9,this)">Replay</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function rate(idx,score,btn){
+// ================================================================
+// RATE — fires on Skip / Play / Replay clicks.
+// Records the engagement score, updates all UI panels, and routes
+// playback to either Spotify or demo mode depending on connection.
+// ================================================================
+async function rate(idx,score,btn){
   const s=songs[idx];
   userData[s.name]=score;
   document.getElementById('row-'+idx).querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active-skip','active-play','active-replay'));
-  const cls=score===0.1?'active-skip':score===0.5?'active-play':'active-replay';
-  btn.classList.add(cls);
-  const dot=document.getElementById('dot-'+idx);
-  dot.className='song-dot '+(score===0.1?'s01':score===0.5?'s05':'s09');
+  btn.classList.add(score===0.1?'active-skip':score===0.5?'active-play':'active-replay');
+  document.getElementById('dot-'+idx).className='song-dot '+(score===0.1?'s01':score===0.5?'s05':'s09');
   const label=score===0.1?'skip':score===0.5?'play':'replay';
   addLog(s.name,label,score);
-  if(score>=0.5){showPlaybar(s);}
   updateCounters();
   updateAll();
   updateWrappedGate();
+  // ----------------------------------------------------------------
+  // PLAYBACK ROUTING
+  // Play (0.5) and Replay (0.9) trigger audio.
+  // Skip (0.1) never triggers audio.
+  // If Spotify is connected, try real streaming first.
+  // If that fails for any reason, fall back to demo mode.
+  // Demo mode just shows the playbar UI without actual audio.
+  // ----------------------------------------------------------------
+  if(score>=0.5){
+    let usedSpotify=false;
+    if(spotifyReady){
+      usedSpotify=await spotifyPlay(s.name);
+    }
+    showPlaybar(s,usedSpotify);
+  }
 }
 
 function addLog(name,action,score){
   const t=new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
   logLines.unshift(`<div class="log-line"><em>[${t}]</em> "${name}" → ${action} <em>(${score})</em></div>`);
   if(logLines.length>25)logLines.pop();
-  const el=document.getElementById('log');
-  el.innerHTML=logLines.join('');
+  document.getElementById('log').innerHTML=logLines.join('');
 }
-
 function updateCounters(){
-  const vals=Object.values(userData);
-  document.getElementById('cnt-total').textContent=vals.length;
-  document.getElementById('cnt-replay').textContent=vals.filter(v=>v===0.9).length;
-  document.getElementById('cnt-play').textContent=vals.filter(v=>v===0.5).length;
-  document.getElementById('cnt-skip').textContent=vals.filter(v=>v===0.1).length;
+  const v=Object.values(userData);
+  document.getElementById('cnt-total').textContent=v.length;
+  document.getElementById('cnt-replay').textContent=v.filter(x=>x===0.9).length;
+  document.getElementById('cnt-play').textContent=v.filter(x=>x===0.5).length;
+  document.getElementById('cnt-skip').textContent=v.filter(x=>x===0.1).length;
 }
-
 function cosine(a,b,keys){
-  let dot=0,ma=0,mb=0;
-  for(const k of keys){const av=a[k]||0,bv=b[k]||0;dot+=av*bv;ma+=av*av;mb+=bv*bv;}
-  return(ma===0||mb===0)?0:dot/(Math.sqrt(ma)*Math.sqrt(mb));
+  let d=0,ma=0,mb=0;
+  for(const k of keys){const av=a[k]||0,bv=b[k]||0;d+=av*bv;ma+=av*av;mb+=bv*bv;}
+  return(ma===0||mb===0)?0:d/(Math.sqrt(ma)*Math.sqrt(mb));
 }
-
 function updateAll(){
   const names=songs.map(s=>s.name);
   const rated=Object.keys(userData).length;
   if(rated<1)return;
   const sims=Object.entries(presetUsers).map(([uid,sc])=>({uid,sim:cosine(userData,sc,names)})).sort((a,b)=>b.sim-a.sim);
-  renderSims(sims.slice(0,3));
-  if(rated>=3)renderRecs(sims.slice(0,3),names);
+  document.getElementById('sim-users').innerHTML=sims.slice(0,3).map(({uid,sim})=>`
+    <div class="sim-row"><span class="sim-uid">${uid}</span><span class="sim-pct">${(sim*100).toFixed(1)}% match</span></div>`).join('');
+  if(rated>=3){
+    const heard=new Set(Object.keys(userData));
+    const cands=names.filter(n=>!heard.has(n));
+    const scored=cands.map(n=>{
+      let ws=0,wt=0;
+      for(const{uid,sim}of sims.slice(0,3)){const sc=presetUsers[uid][n]||0;if(sc>0){ws+=sim*sc;wt+=sim;}}
+      return{n,score:wt>0?ws/wt:0};
+    }).filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
+    document.getElementById('recs').innerHTML=scored.length?scored.map(r=>{
+      const s=songs.find(x=>x.name===r.n);
+      return`<div class="rec-item"><div class="rec-name">${r.n}</div><div class="rec-sub">${s?.artist} · ${s?.genre} · predicted ${r.score.toFixed(2)}</div><div class="rec-bar-bg"><div class="rec-bar-fill" style="width:${Math.round(r.score*100)}%"></div></div></div>`;
+    }).join(''):'<div class="empty-msg">Rate more songs</div>';
+  }
 }
 
-function renderSims(top3){
-  document.getElementById('sim-users').innerHTML=top3.map(({uid,sim})=>`
-    <div class="sim-row">
-      <span class="sim-uid">${uid}</span>
-      <span class="sim-pct">${(sim*100).toFixed(1)}% match</span>
-    </div>
-  `).join('');
-}
-
-function renderRecs(top3,names){
-  const heard=new Set(Object.keys(userData));
-  const cands=names.filter(n=>!heard.has(n));
-  if(!cands.length){document.getElementById('recs').innerHTML='<div class="empty-msg">All songs rated</div>';return;}
-  const scored=cands.map(n=>{
-    let ws=0,wt=0;
-    for(const{uid,sim}of top3){const sc=presetUsers[uid][n]||0;if(sc>0){ws+=sim*sc;wt+=sim;}}
-    return{n,score:wt>0?ws/wt:0};
-  }).filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
-  if(!scored.length){document.getElementById('recs').innerHTML='<div class="empty-msg">Rate more songs</div>';return;}
-  document.getElementById('recs').innerHTML=scored.map(r=>{
-    const s=songs.find(x=>x.name===r.n);
-    return`<div class="rec-item">
-      <div class="rec-name">${r.n}</div>
-      <div class="rec-sub">${s?.artist} · ${s?.genre} · predicted ${r.score.toFixed(2)}</div>
-      <div class="rec-bar-bg"><div class="rec-bar-fill" style="width:${Math.round(r.score*100)}%"></div></div>
-    </div>`;
-  }).join('');
-}
-
-function showPlaybar(s){
-  currentSong=s;
-  playing=true;
+// ================================================================
+// PLAYBAR — shows currently playing song at the bottom.
+// isSpotify=true: real audio is streaming through Spotify.
+// isSpotify=false: demo mode — UI only, no actual audio.
+// The badge text and color switch to reflect the active mode.
+// ================================================================
+function showPlaybar(s,isSpotify){
+  currentSong=s;playing=true;
   document.getElementById('pb-title').textContent=s.name;
   document.getElementById('pb-artist').textContent=s.artist;
-  document.getElementById('pb-mode').textContent='Demo mode';
+  const badge=document.getElementById('pb-badge');
+  badge.textContent=isSpotify?'Spotify':'Demo mode';
+  badge.className='pb-badge '+(isSpotify?'spotify':'demo');
   document.getElementById('playbar').classList.add('visible');
-  document.getElementById('pb-playpause').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+  document.getElementById('pb-pp').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 }
-
-function togglePlay(){
+async function togglePlay(){
   playing=!playing;
-  document.getElementById('pb-playpause').innerHTML=playing
+  document.getElementById('pb-pp').innerHTML=playing
     ?'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'
     :'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  if(spotifyReady&&spotifyPlayer){
+    if(playing) await spotifyPlayer.resume(); else await spotifyPlayer.pause();
+  }
 }
-
-function stopPlay(){
+async function stopPlay(){
   playing=false;
+  if(spotifyReady&&spotifyPlayer) await spotifyPlayer.pause();
   document.getElementById('playbar').classList.remove('visible');
   currentSong=null;
 }
-
 function updateWrappedGate(){
-  const rated=Object.keys(userData).length;
-  const pct=Math.min(100,Math.round((rated/5)*100));
-  document.getElementById('w-prog').style.width=pct+'%';
-  document.getElementById('w-prog-label').textContent=rated>=5?`Ready — ${rated} songs rated`:`${rated} / 5 songs rated`;
-  const btn=document.getElementById('wrapped-btn');
-  btn.className=rated>=5?'wrapped-btn on':'wrapped-btn off';
+  const r=Object.keys(userData).length;
+  document.getElementById('w-prog').style.width=Math.min(100,Math.round(r/5*100))+'%';
+  document.getElementById('w-prog-label').textContent=r>=5?`Ready — ${r} songs rated`:`${r} / 5 songs rated`;
+  document.getElementById('wrapped-btn').className=r>=5?'wrapped-btn on':'wrapped-btn off';
 }
-
 function genWrapped(){
   if(Object.keys(userData).length<5)return;
   const entries=Object.entries(userData).sort((a,b)=>b[1]-a[1]);
   const top3=entries.slice(0,3);
-  const artistMap={};
-  for(const[name,score]of Object.entries(userData)){
-    if(score>=0.5){
-      const a=songs.find(s=>s.name===name)?.artist;
-      if(a)artistMap[a]=(artistMap[a]||0)+score;
+  const aMap={},gMap={};
+  for(const[n,sc]of Object.entries(userData)){
+    if(sc>=0.5){
+      const a=songs.find(s=>s.name===n)?.artist;if(a)aMap[a]=(aMap[a]||0)+sc;
+      const g=songs.find(s=>s.name===n)?.genre;if(g)gMap[g]=(gMap[g]||0)+sc;
     }
   }
-  const topArtist=Object.entries(artistMap).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
-  const genreMap={};
-  for(const[name,score]of Object.entries(userData)){
-    if(score>=0.5){
-      const g=songs.find(s=>s.name===name)?.genre;
-      if(g)genreMap[g]=(genreMap[g]||0)+score;
-    }
-  }
-  const topGenre=Object.entries(genreMap).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  const topArtist=Object.entries(aMap).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  const topGenre=Object.entries(gMap).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
   const replays=Object.values(userData).filter(v=>v===0.9).length;
   const total=Object.keys(userData).length;
-  const replayPct=Math.round((replays/total)*100);
   const names=songs.map(s=>s.name);
   const sims=Object.entries(presetUsers).map(([uid,sc])=>({uid,sim:cosine(userData,sc,names)})).sort((a,b)=>b.sim-a.sim);
   const twin=sims[0];
-  const simPct=Math.round(twin.sim*100);
   const funs=[
-    `You replayed ${replayPct}% of everything you touched. The algorithm noticed.`,
+    `You replayed ${Math.round(replays/total*100)}% of everything you touched. The algorithm noticed.`,
     `${topArtist} had a strong hold on you this session. The data doesn't lie.`,
     `Your ${topGenre} affinity came through clearly — even without you saying a word.`,
     `${replays} replays out of ${total} songs. That's not casual listening. That's devotion.`
   ];
-  const fun=funs[Math.floor(Math.random()*funs.length)];
   document.getElementById('w-date').textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   document.getElementById('w-content').innerHTML=`
-    <div class="w-stat">
-      <div class="w-stat-label">Top 3 songs</div>
-      ${top3.map(([name,score],i)=>{
-        const s=songs.find(x=>x.name===name);
-        const badgeCls=score===0.9?'badge-replay':'badge-play';
-        const badgeLabel=score===0.9?'Replayed':'Played';
-        return`<div class="w-song-row"><div class="w-song-name">${i+1}. ${name}<br><span style="font-size:11px;color:var(--text3)">${s?.artist}</span></div><span class="w-song-badge ${badgeCls}">${badgeLabel}</span></div>`;
-      }).join('')}
-    </div>
-    <div class="w-stat">
-      <div class="w-stat-label">Top artist</div>
-      <div class="w-stat-val">${topArtist}</div>
-      <div class="w-stat-sub">Highest cumulative engagement this session</div>
-    </div>
-    <div class="w-stat">
-      <div class="w-stat-label">Top genre</div>
-      <div class="w-stat-val">${topGenre}</div>
-      <div class="w-stat-sub">Your strongest behavioral signal</div>
-    </div>
-    <div class="w-stat">
-      <div class="w-stat-label">Session breakdown</div>
-      <div class="w-stat-val">${total} songs rated</div>
-      <div class="w-stat-sub">${replays} replayed · ${Object.values(userData).filter(v=>v===0.5).length} played · ${Object.values(userData).filter(v=>v===0.1).length} skipped</div>
-    </div>
-    <div class="w-stat">
-      <div class="w-stat-label">Closest taste twin</div>
-      <div class="w-stat-val">${twin.uid}</div>
-      <div class="w-stat-sub">${simPct}% cosine similarity match</div>
-    </div>
-    <div class="w-callout">${fun}</div>
-  `;
+    <div class="w-stat"><div class="w-stat-label">Top 3 songs</div>${top3.map(([n,sc],i)=>{const s=songs.find(x=>x.name===n);return`<div class="w-song-row"><div class="w-song-name">${i+1}. ${n}<br><span style="font-size:11px;color:var(--text3)">${s?.artist}</span></div><span class="w-song-badge ${sc===0.9?'badge-replay':'badge-play'}">${sc===0.9?'Replayed':'Played'}</span></div>`;}).join('')}</div>
+    <div class="w-stat"><div class="w-stat-label">Top artist</div><div class="w-stat-val">${topArtist}</div><div class="w-stat-sub">Highest cumulative engagement this session</div></div>
+    <div class="w-stat"><div class="w-stat-label">Top genre</div><div class="w-stat-val">${topGenre}</div><div class="w-stat-sub">Your strongest behavioral signal</div></div>
+    <div class="w-stat"><div class="w-stat-label">Session breakdown</div><div class="w-stat-val">${total} songs rated</div><div class="w-stat-sub">${replays} replayed · ${Object.values(userData).filter(v=>v===0.5).length} played · ${Object.values(userData).filter(v=>v===0.1).length} skipped</div></div>
+    <div class="w-stat"><div class="w-stat-label">Closest taste twin</div><div class="w-stat-val">${twin.uid}</div><div class="w-stat-sub">${Math.round(twin.sim*100)}% cosine similarity match</div></div>
+    <div class="w-callout">${funs[Math.floor(Math.random()*funs.length)]}</div>`;
   const out=document.getElementById('wrapped-out');
   out.className='wrapped-output show';
   out.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ================================================================
+// PAGE LOAD SEQUENCE
+// 1. Build the song catalog
+// 2. Check sessionStorage for a token from a previous login
+//    in this same tab session (survives the OAuth redirect)
+// 3. Handle the OAuth redirect if ?code= is in the URL
+//    (this is how we get the token after Spotify login)
+// ================================================================
 buildCatalog();
+const saved=sessionStorage.getItem('sp_token');
+if(saved){
+  spotifyToken=saved;
+  if(sdkLoaded) initPlayer(); // SDK already ready, go straight to init
+}
+handleOAuthRedirect();
 </script>
 </body>
 </html>
